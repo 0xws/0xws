@@ -1,0 +1,48 @@
+<script>
+  // TODO: Implement fuse search
+
+  document.addEventListener("keydown", function (event) {
+    const searchInput = document.getElementById("search");
+
+    // Don't trigger if focus is already on an input or textarea
+    const tag = document.activeElement.tagName.toLowerCase();
+    const isTyping = ["input", "textarea"].includes(tag);
+
+    if (isTyping) return;
+
+    if (event.key === "/" && !event.ctrlKey && !event.metaKey) {
+      event.preventDefault();
+      searchInput?.focus();
+    }
+
+    if (
+      (event.key === "k" || event.key === "K") &&
+      (event.metaKey || event.ctrlKey)
+    ) {
+      event.preventDefault();
+      searchInput?.focus();
+    }
+  });
+</script>
+
+<input
+  id="search"
+  class="search"
+  type="search"
+  placeholder="🔎 CTRL + K or /"
+/>
+
+<style>
+  .search {
+    @apply justify-self-end py-1 px-2 bg-transparent text-right;
+
+    &:hover,
+    &:focus {
+      @apply bg-[#1e1b4b] outline-none;
+    }
+
+    &::-webkit-search-cancel-button {
+      @apply pl-2;
+    }
+  }
+</style>
