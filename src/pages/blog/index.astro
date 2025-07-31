@@ -1,18 +1,18 @@
 ---
 import Layout from "../../layout.astro";
+import { getCollection } from "astro:content";
 
-import Navbar from "../../components/Navbar.astro";
+const posts = await getCollection("blog");
 ---
 
+
 <Layout>
-  <Navbar />
-  <div
-    class="max-w-xs md:max-w-3xl flex flex-col items-center md:items-stretch gap-8"
-  >
-    <div
-      class="readme mt-16 max-w-4xl mb-16 pt-12 pb-8 px-8 md:p-12 bg-indigo-900 rounded-lg border border-[#1e1b4b] prose prose-sm md:prose-lg prose-slate prose-invert"
-    >
-      Oui
-    </div>
-  </div>
+  <ul>
+    {posts.map(post => (
+      <li>
+        <a href={`/blog/${post.slug}`}>{post.data.title}</a> — {post.data.pubDate.toDateString()}
+        <p>{post.data.description}</p>
+      </li>
+    ))}
+  </ul>
 </Layout>

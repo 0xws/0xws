@@ -1,9 +1,8 @@
 ---
 import Layout from "../../layout.astro";
-import Navbar from "../../components/Navbar.astro";
-
 import { getCollection } from "astro:content";
-// 1. Generate a new path for every collection entry
+
+// Generate paths for each blog post
 export async function getStaticPaths() {
   const blogEntries = await getCollection("blog");
   return blogEntries.map((entry) => ({
@@ -11,27 +10,37 @@ export async function getStaticPaths() {
     props: { entry },
   }));
 }
-// 2. For your template, you can get the entry directly from the prop
+
+// Get post content from props
 const { entry } = Astro.props;
 const { Content } = await entry.render();
+const formattedDate = entry.data.pubDate.toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
 ---
 
 <Layout>
-  <Navbar />
-  <div
-    class="max-w-xs md:max-w-6xl flex flex-col items-center md:items-stretch gap-8"
-  >
-    <div
-      class="readme mt-16 max-w-6xl mb-16 pt-12 pb-8 px-8 md:p-12 bg-indigo-900 rounded-lg border border-[#1e1b4b]"
-    >
-      <h1 class="text-4xl">{entry.data.title}</h1>
-      <span class="text-lg">{entry.data.pubDate.toLocaleDateString()}</span>
-
-      <hr />
-
-      <div class="prose prose-sm md:prose-lg prose-slate prose-invert">
-        <Content />
+  <article class="max-w-3xl mx-auto px-6 py-8">
+    <header class="mb-10">
+      <h1 class="text-xl font-extrabold tracking-tight">
+        {entry.data.title}
+      </h1>
+      <div class="flex items-center justify-between h-4">
+        <div class="text-sm text-gray-400">{formattedDate}</div>
+        <div class="flex flex-wrap gap-2">
+          {entry.data.tags.map(tag => (
+            <span class="bg-indigo-900 text-blue-200 px-3 py-1 text-xs rounded-full">
+              #{tag}
+            </span>
+          ))}
+        </div>
       </div>
+    </header>
+
+    <div class="prose prose-invert prose-slate prose-lg max-w-none">
+      <Content />
     </div>
-  </div>
+  </article>
 </Layout>

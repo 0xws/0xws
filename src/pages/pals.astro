@@ -1,0 +1,30 @@
+---
+import Layout from "../layout.astro";
+
+const pals = [
+  {name: "djnn", link: "https://djnn.sh/"},
+  {name: "RaitoBezarius", link: "https://github.com/RaitoBezarius"},
+  {name: "OpenFreax", link: "https://open-freax.fr/"},
+  {name: "p-l-", link: "https://github.com/p-l-"},
+  {name: "Hiray", link: "https://hiray.me"},
+];
+---
+
+<Layout>
+  This page is for all the people I'm admiring or with whom I had the chance
+  of working with. They all have something to do regarding my work and a
+  reason for which I'm particulary keen on following them along with their
+  work. 🫶
+  <hr />
+
+  <ul>
+    {
+      pals.map(({name, link}) => (
+        <li>
+          <a href={link}>{name}</a>
+        </li>
+      ))
+    }
+  </ul>
+</Layout>
+

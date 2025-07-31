@@ -1,7 +1,8 @@
 # 0xws
 
-programming, cybersecurity and electronics enthusiast
+🙋 Father of useless web apps. I like programming, cybersecurity and electronics.
 
-Aiming at being a Cloud security architect.
+🧑‍💻 Aiming at being a Cloud security architect. I work with Typescript, Python
+and Rust.
 
-I love producing music and race cars. ☕
+Otherwise, I like race cars. ☕
