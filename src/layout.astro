@@ -3,6 +3,8 @@ import { Content as README } from "../README.md";
 
 import Navbar from "./components/Navbar.astro";
 import Mascot from "./components/Mascot.astro";
+
+import './styles/global.css'
 ---
 
 <html lang="en">
@@ -23,7 +25,7 @@ import Mascot from "./components/Mascot.astro";
   <body class="flex flex-col items-center text-sm md:text-lg text-indigo-300">
     <div class="mt-16 flex">
       <div
-        class="max-w-xs md:max-w-3xl flex flex-col items-center md:items-stretch"
+        class="max-w-xs md:max-w-7xl flex flex-col items-center md:items-stretch"
       >
         <Navbar />
         <div
@@ -39,7 +41,7 @@ import Mascot from "./components/Mascot.astro";
         </div>
       </div>
     </div>
-    <div class="text-sm">
+    <div class="mb-16 text-sm">
       Background: <a href="https://heropatterns.com/">Hero Patterns</a> | 3D Model:
       <a href="https://skfb.ly/6Tnso">Lexyc16</a> | Inspired by <a
         href="https://djnn.sh">djnn.sh</a
@@ -49,11 +51,13 @@ import Mascot from "./components/Mascot.astro";
 </html>
 
 <style is:global>
+  @reference "tailwindcss";
+
   :root {
-    @apply bg-[radial-gradient(ellipse_at_bottom_right,_var(--tw-gradient-stops))] from-[#030117] to-[#070424];
+    @apply bg-radial from-[#030117] to-[#070424];
     font-family: "JetBrains Mono", monospace;
     overflow-x: hidden;
-    background-color: theme(colors.indigo.900);
+    background-color: var(--color-indigo-900);
   }
 
   h1,
@@ -63,13 +67,13 @@ import Mascot from "./components/Mascot.astro";
   h5,
   h6 {
     &::before {
-      color: theme(colors.indigo.500);
+      color: var(--color-indigo-500);
       font-weight: 900;
     }
   }
 
   h1 {
-    @apply text-3xl pb-1 border-b border-indigo-500;
+    @apply text-6xl mb-8 pb-4 border-b border-indigo-500;
 
     &::before {
       content: "# ";
@@ -77,7 +81,7 @@ import Mascot from "./components/Mascot.astro";
   }
 
   h2 {
-    @apply text-2xl;
+    @apply text-5xl;
 
     &::before {
       content: "## ";
@@ -85,7 +89,7 @@ import Mascot from "./components/Mascot.astro";
   }
 
   h3 {
-    @apply text-xl;
+    @apply text-4xl;
 
     &::before {
       content: "### ";
@@ -93,7 +97,7 @@ import Mascot from "./components/Mascot.astro";
   }
 
   h4 {
-    @apply text-lg;
+    @apply text-3xl;
 
     &::before {
       content: "#### ";
@@ -125,7 +129,7 @@ import Mascot from "./components/Mascot.astro";
   }
 
   hr {
-    @apply border-b border-indigo-500;
+    @apply my-8 border-b border-indigo-500;
   }
 </style>
 

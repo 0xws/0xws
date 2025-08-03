@@ -30,7 +30,7 @@ const formattedDate = entry.data.pubDate.toLocaleDateString("en-US", {
       <div class="flex items-center justify-between h-4">
         <div class="text-sm text-gray-400">{formattedDate}</div>
         <div class="flex flex-wrap gap-2">
-          {entry.data.tags.map(tag => (
+          {entry.data.tags.map((tag: string) => (
             <span class="bg-indigo-900 text-blue-200 px-3 py-1 text-xs rounded-full">
               #{tag}
             </span>
