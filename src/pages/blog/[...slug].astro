@@ -1,0 +1,46 @@
+---
+import Layout from "../../layout.astro";
+import { getCollection } from "astro:content";
+
+// Generate paths for each blog post
+export async function getStaticPaths() {
+  const blogEntries = await getCollection("blog");
+  return blogEntries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+// Get post content from props
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const formattedDate = entry.data.pubDate.toLocaleDateString("en-US", {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
+---
+
+<Layout>
+  <article class="max-w-3xl mx-auto px-6 py-8">
+    <header class="mb-10">
+      <h1 class="text-xl font-extrabold tracking-tight">
+        {entry.data.title}
+      </h1>
+      <div class="flex items-center justify-between h-4">
+        <div class="text-sm text-gray-400">{formattedDate}</div>
+        <div class="flex flex-wrap gap-2">
+          {entry.data.tags.map((tag: string) => (
+            <span class="bg-indigo-900 text-blue-200 px-3 py-1 text-xs rounded-full">
+              #{tag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </header>
+
+    <div class="prose prose-invert prose-slate prose-lg max-w-none">
+      <Content />
+    </div>
+  </article>
+</Layout>

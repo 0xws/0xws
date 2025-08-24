@@ -1,0 +1,41 @@
+---
+import { getCollection } from "astro:content";
+
+import Search from "./Search";
+
+const allPosts = await getCollection("blog");
+
+const links = [
+  { name: "λ", href: "/" },
+  { name: "🐙", href: "https://github.com/0xws" },
+  { name: "📝 Blog", href: "/blog" },
+  { name: "📓 Reads", href: "/reads" },
+  { name: "😺 Pals", href: "/pals" },
+];
+---
+
+<nav
+  class="flex justify-center items-center text-xs lg:text-lg w-full py-4 text-lg"
+>
+  {/* Stack items on mobile, row on desktop. Add gap for spacing. */}
+  <div class="flex flex-col md:flex-row justify-between items-center w-full max-w-4xl gap-4 md:gap-0">
+    <ul class="flex justify-center items-center gap-3 font-bold">
+      {
+        links.map((l) => (
+          <li>
+            <a href={l.href} class="px-2 py-1 rounded-sm hover:bg-[#1e1b4b]">
+              {l.name}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+    <Search allPosts={allPosts} client:load />
+  </div>
+</nav>
+
+<style>
+  nav a {
+    @apply no-underline;
+  }
+</style>

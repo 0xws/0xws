@@ -1,0 +1,33 @@
+---
+import Layout from "../../layout.astro";
+import { getCollection } from "astro:content";
+
+const posts = await getCollection("blog");
+---
+
+
+<Layout>
+  <h1>Blog</h1>
+
+  <h2>Posts</h2>
+  <ul>
+    {posts.map(post => (
+      <li>
+        <a href={`/blog/${post.slug}`}>{post.data.title}</a> — {post.data.pubDate.toDateString()}
+        <div class="mt-2 flex flex-wrap gap-2">
+          {post.data.tags.map(tag => (
+            <span class="bg-indigo-900 text-blue-200 px-3 py-1 text-xs rounded-full">
+              #{tag}
+            </span>
+          ))}
+        </div>
+        <p>{post.data.description}</p>
+      </li>
+    ))}
+  </ul>
+
+  <h2>External Publications</h2>
+  <ul>
+    <li>Nothing, for the moment. :)</li>
+  </ul>
+</Layout>
