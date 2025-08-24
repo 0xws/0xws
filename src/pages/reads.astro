@@ -1,0 +1,31 @@
+---
+import Layout from "../layout.astro";
+
+const reads = [
+  {title: "Metro 2033", author: "Dmitry Glukhovsky"},
+  {title: "Inside Cyber Warfare, 3rd Edition", author: "Jeffrey Caruso"},
+  {title: "The Phoenix Project", author: "Gene Kim, George Spafford, Kevin Behr"},
+  {title: "Rebuilding Milo", author: "Aaron Horschig"},
+  {title: "Crucial Conversations: Tools for Talking When Stakes Are High", author: "Kerry Patterson, Joseph Grenny, Ron McMillan, Al Switzler"},
+  {title: "The 25th Hour: Supercharging Productivity", author: "Guillaume Declair, Bao Dinh, Jérôme Dumont"},
+];
+---
+
+<Layout>
+  This page is dedicated to interesting reads I've found out or marked me
+  particularly. There's no particular grouping, just a page to point out
+  what's interesting to me. :)
+
+  <hr />
+
+  <ul>
+    {
+      reads.map(({title, author}) => (
+        <li>
+          <span class="italic text-white">{title}</span> by {author}
+        </li>
+      ))
+    }
+  </ul>
+</Layout>
+

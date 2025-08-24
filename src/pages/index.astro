@@ -1,0 +1,51 @@
+---
+import Layout from "../layout.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog"))
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 3);
+---
+
+<Layout>
+  <h1>Welcome !</h1>
+
+  <p>
+    👋 I’m ws (/vaɪs/), a DevSecOps engineer. This site is the place
+    to gather my projects and thoughts on everything I like. From IT
+    to anything related to cars and / or electronics.
+  </p>
+
+  <p>
+    I'm mostly working with Typescript, Python, Rust and Zig as daily
+    drivers. These help me to perform my tasks in full-stack web development,
+    system development, gamedev and plenty of other tasks.
+
+    On the infrastructure side, I'm mostly using Terraform/OpenTofu, K8s
+    and NixOS.
+  </p>
+
+  <h3>Current projects</h3>
+
+  Most of my projects are private by the time I open them, check out my blog posts
+  where I talk about it.
+
+  <ul>
+    <li>Posture, a soon-to-be open-source vulnerability management system</li>
+    <li>Centurion, a collaborative hosting stack for video game servers and development web servers running on Nix</li>
+  </ul>
+
+  <h3>Latest Posts</h3>
+  <ul>
+    {posts.map(post => (
+      <li>
+        <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+        <p>{post.data.description}</p>
+      </li>
+    ))}
+  </ul>
+
+  <h3>Contact me</h3>
+
+  I'm currently employed, but feel free to reach me through <a href="mailto:0xws.bottling026@passfwd.com">e-mail</a>.
+</Layout>

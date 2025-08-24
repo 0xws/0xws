@@ -1,0 +1,160 @@
+<script>
+  import * as THREE from "three";
+
+  import { AnimationMixer } from "three";
+  import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+  import { EffectComposer } from "three/addons/postprocessing/EffectComposer.js";
+  import { RenderPass } from "three/addons/postprocessing/RenderPass.js";
+  import { ShaderPass } from "three/addons/postprocessing/ShaderPass.js";
+
+  function isWebGLAvailable() {
+    try {
+      const canvas = document.createElement("canvas");
+      return !!(
+        window.WebGLRenderingContext &&
+        (canvas.getContext("webgl") || canvas.getContext("experimental-webgl"))
+      );
+    } catch (e) {
+      return false;
+    }
+  }
+
+  const container = document.querySelector("#mascot");
+  const fallbackImage = document.querySelector("#mascot__no-js");
+
+  if (!container) {
+    throw Error("yo where the container at");
+  }
+
+  if (isWebGLAvailable()) {
+    fallbackImage.remove();
+
+    const aspect = container.scrollWidth / container.scrollHeight;
+    const zoom = 2.5;
+    const frustumSize = 5;
+
+    const camera = new THREE.OrthographicCamera(
+      (frustumSize * aspect) / -zoom, // left
+      (frustumSize * aspect) / zoom, // right
+      frustumSize / zoom, // top
+      frustumSize / -zoom, // bottom
+      1, // near
+      500, // far
+    );
+
+    const scene = new THREE.Scene();
+
+    camera.position.set(5, 5, 5);
+    camera.lookAt(scene.position);
+
+    let mixer: AnimationMixer;
+    const clock = new THREE.Clock();
+
+    const loader = new GLTFLoader();
+    loader.load(
+      "/rx7.glb",
+      function (gltf) {
+        const model = gltf.scene;
+
+        const box = new THREE.Box3().setFromObject(model);
+        const center = box.getCenter(new THREE.Vector3());
+        model.position.sub(center);
+
+        model.traverse(function (child) {
+          if (child.isMesh) {
+            const unlitMaterial = new THREE.MeshBasicMaterial({
+              color: child.material.color,
+              map: child.material.map,
+            });
+            child.material = unlitMaterial;
+          }
+        });
+
+        scene.add(model);
+
+        mixer = new THREE.AnimationMixer(model);
+        if (gltf.animations.length > 0) {
+          const action = mixer.clipAction(gltf.animations[0]);
+          action.play();
+        }
+      },
+      undefined,
+      function (error) {
+        console.error(error);
+      },
+    );
+
+    const renderer = new THREE.WebGLRenderer({ alpha: true });
+    renderer.setClearColor(0x000000, 0);
+    renderer.setSize(container.scrollWidth, container.scrollHeight);
+
+    // Ppixelation
+    const composer = new EffectComposer(renderer);
+    composer.addPass(new RenderPass(scene, camera));
+
+    const PixelShader = {
+      uniforms: {
+        tDiffuse: { value: null },
+        resolution: {
+          value: new THREE.Vector2(container.scrollWidth, container.scrollHeight),
+        },
+        pixel_size: { value: 1.5 },
+      },
+      vertexShader: `
+        varying highp vec2 vUv;
+          void main() {
+            vUv = uv;
+            gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+        }`,
+      fragmentShader: `
+        uniform sampler2D tDiffuse;
+        uniform vec2 resolution;
+        uniform float pixel_size;
+        varying highp vec2 vUv;
+
+        void main(){
+          vec2 dxy = pixel_size / resolution;
+          vec2 coord = dxy * floor(vUv / dxy);
+          gl_FragColor = texture2D(tDiffuse, coord);
+        }`,
+    };
+
+    const pixelPass = new ShaderPass(PixelShader);
+    composer.addPass(pixelPass);
+
+    window.addEventListener("resize", () => {
+      const newAspect = container.scrollWidth / container.scrollHeight;
+      camera.left = (frustumSize * newAspect) / -zoom;
+      camera.right = (frustumSize * newAspect) / zoom;
+      camera.top = frustumSize / zoom;
+      camera.bottom = frustumSize / -zoom;
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(container.scrollWidth, container.scrollHeight);
+      composer.setSize(container.scrollWidth, container.scrollHeight);
+
+      pixelPass.uniforms["resolution"].value.set(
+        container.scrollWidth,
+        container.scrollHeight,
+      );
+    });
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const delta = clock.getDelta();
+
+      if (mixer) {
+        mixer.update(delta);
+      }
+
+      composer.render();
+    }
+
+    container.appendChild(renderer.domElement);
+    animate();
+  }
+</script>
+
+<div id="mascot" class="w-48 aspect-square">
+  <img id="mascot__no-js" src="/favicon.svg" alt="My funny logo" />
+</div>

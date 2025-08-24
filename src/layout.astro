@@ -1,0 +1,146 @@
+---
+import { Content as README } from "../README.md";
+
+import Navbar from "./components/Navbar.astro";
+import Mascot from "./components/Mascot.astro";
+
+import './styles/global.css'
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+      rel="stylesheet"
+    />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>0xws</title>
+  </head>
+
+  <body class="flex flex-col items-center text-sm md:text-lg text-indigo-300 px-4">
+    {/* Use flex-col on mobile and md:flex-row for desktop. Add a gap for spacing. */}
+    <div class="mt-16 flex flex-col md:flex-row items-center md:items-stretch justify-stretch w-full max-w-7xl gap-8">
+      {/* Main content column */}
+      <div class="flex flex-col items-center w-full md:max-w-4xl">
+        <Navbar />
+        <main
+          class="w-full mb-4 pt-12 pb-8 px-4 sm:px-8 md:p-12 bg-[#1e1b4b] prose prose-sm md:prose-lg prose-slate prose-invert min-h-64"
+        >
+          <slot />
+        </main>
+      </div>
+
+      {/* Sidebar column (Mascot + README) - stacks below on mobile */}
+      <div class="w-full md:w-auto md:max-w-xs flex flex-col items-center gap-6">
+        <Mascot />
+        <div class="flex flex-col gap-4">
+          <README />
+        </div>
+      </div>
+    </div>
+
+    <footer class="my-16 text-xs text-center">
+      Background: <a href="https://heropatterns.com/">Hero Patterns</a> | 3D Model:
+      <a href="https://skfb.ly/6Tnso">Lexyc16</a> | Inspired by <a
+        href="https://djnn.sh">djnn.sh</a
+      > ❤️
+    </footer>
+  </body>
+</html>
+
+<style is:global>
+  @reference "tailwindcss";
+
+  :root {
+    @apply bg-radial from-[#030117] to-[#070424];
+    font-family: "JetBrains Mono", monospace;
+    overflow-x: hidden;
+    background-color: var(--color-indigo-900);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    &::before {
+      color: var(--color-indigo-500);
+      font-weight: 900;
+    }
+  }
+
+  h1 {
+    @apply text-4xl sm:text-6xl mb-8 pb-4 border-b border-indigo-500;
+
+    &::before {
+      content: "# ";
+    }
+  }
+
+  h2 {
+    @apply text-3xl sm:text-5xl;
+
+    &::before {
+      content: "## ";
+    }
+  }
+
+  h3 {
+    @apply text-2xl sm:text-4xl;
+
+    &::before {
+      content: "### ";
+    }
+  }
+
+  h4 {
+    @apply text-xl sm:text-3xl;
+
+    &::before {
+      content: "#### ";
+    }
+  }
+
+  h5 {
+    @apply text-sm;
+
+    &::before {
+      content: "##### ";
+    }
+  }
+
+  h6 {
+    @apply text-xs;
+
+    &::before {
+      content: "###### ";
+    }
+  }
+
+  a {
+    @apply underline;
+
+    &:hover {
+      @apply text-indigo-500;
+    }
+  }
+
+  hr {
+    @apply my-8 border-b border-indigo-500;
+  }
+</style>
+
+<style>
+  body {
+    @apply w-full min-h-screen;
+
+    background-image: url("/bg.svg");
+    background-size: 1200px;
+  }
+</style>
